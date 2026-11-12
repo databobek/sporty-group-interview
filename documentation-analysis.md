@@ -141,7 +141,7 @@ with `422`; accepting it is a defect.
 | DA-G15 | Filters and slip | Not defined what happens to the active selection when its match is filtered out | Observe only. | Yes |
 | DA-G16 | Odds session | "Static for session" doesn't define session | Odds stay the same across `GET /api/matches` calls within one test run. | Yes |
 | DA-G17 | Balance | Reset-balance resets to an "initial configured value", and the value appears only in the glossary (€125.50) | The initial and reset balance is €125.50 per `x-user-id`. The header and bet slip balance always agree. | Yes |
-| DA-G18 | Float maths | API amounts are JSON `number`s, so floating-point drift is possible (e.g. 125.50 − 10.10 giving `115.39999…`) | Amounts are compared at 2 dp with a €0.01 tolerance. Linked to DA-G1. | Yes |
+| DA-G18 | Float maths | API amounts are JSON `number`s, so floating-point drift is possible (e.g. 125.50 − 10.10 giving `115.39999…`). Input has the same problem: a stake of `10.555` may reach the server as `10.55499…`, so an API precision check can pass or fail for reasons unrelated to validation (test plan B-03). | Amounts are compared at 2 dp with a €0.01 tolerance. Linked to DA-G1. Results of API precision checks are reported with this caveat. | Yes |
 | DA-G19 | Receipt fields | No format for Bet ID or timestamp, and no time zone | Bet ID is non-empty and unique per bet. The timestamp is within a few minutes of placement, in local time. | Yes |
 | DA-G20 | Slip behavior | Not defined: whether the stake survives a selection change, or what clicking the already-selected odds does | Observe only. | Yes |
 | DA-G21 | UI auth | Behavior when `?user-id=` is missing from the UI URL is unspecified | Observe only. | Yes |
@@ -175,7 +175,7 @@ Questions for the product owner. They feed the spec clarifications in the Part C
 
 | # | Ref | Question |
 |---|---|---|
-| 7 | DA-G1, G18 | What are the payout rounding mode and the monetary precision? Should the API use exact decimals? |
+| 7 | DA-G1, G18 | What are the payout rounding mode and the monetary precision? Should the API carry money as exact decimals (e.g. decimal strings or integer cents) instead of JSON floats? |
 | 8 | DA-G3 | Which message wins when several stake rules fail at once? |
 | 9 | DA-G4 | What is the message text for required, non-numeric and precision errors? |
 | 10 | DA-G5 | Which decimal separators does the stake input accept? |
