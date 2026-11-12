@@ -64,7 +64,7 @@ jobs:
       - name: Fetch report history from gh-pages
         if: always() && github.event_name != 'pull_request'
         run: |
-          git fetch origin gh-pages --depth=1 || exit 0
+          git fetch --depth=1 origin gh-pages:refs/remotes/origin/gh-pages || exit 0  # none yet
           git worktree add gh-pages-history origin/gh-pages
           if [ -d gh-pages-history/history ]; then cp -r gh-pages-history/history allure-results/; fi
 
