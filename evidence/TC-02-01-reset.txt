@@ -1,0 +1,13 @@
+# 2026-11-12 18:09:56
+POST https://qae-assignment-tau.vercel.app/api/reset-balance
+User-Agent: python-requests/2.34.2
+Accept-Encoding: gzip, deflate
+Accept: */*
+Connection: keep-alive
+x-user-id: ***
+Content-Length: 0
+
+
+
+--- 200 OK
+{"message":"Balance reset successfully","balance":125.5,"currency":"EUR"}

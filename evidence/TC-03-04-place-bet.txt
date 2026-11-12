@@ -1,0 +1,14 @@
+# 2026-11-12 18:03:19
+POST https://qae-assignment-tau.vercel.app/api/place-bet
+User-Agent: python-requests/2.34.2
+Accept-Encoding: gzip, deflate
+Accept: */*
+Connection: keep-alive
+x-user-id: ***
+Content-Length: 145
+Content-Type: application/json
+
+{"matchId": "bundesliga-bayern-leverkusen-2026-11-13", "selection": "HOME", "stake": 10.0, "odds": 1000.0, "payout": 99999.0, "balance": 99999.0}
+
+--- 200 OK
+{"message":"Bet placed successfully","matchId":"bundesliga-bayern-leverkusen-2026-11-13","selection":"HOME","stake":10,"odds":1.75,"payout":17.5,"balance":110,"currency":"USD"}
