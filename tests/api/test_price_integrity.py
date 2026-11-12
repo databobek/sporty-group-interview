@@ -8,7 +8,6 @@ import pytest
 from betting_qa.api import Balance, BettingApiClient, Match, Selection
 from betting_qa.checks import SoftChecks
 from betting_qa.money import expected_payout
-from betting_qa.rules import INITIAL_BALANCE
 
 
 @pytest.mark.api
@@ -30,6 +29,7 @@ def test_client_supplied_price_fields_are_ignored(
     stake = Decimal("10.00")
     match = upcoming_match
     catalog_odds = match.odds.home
+    start = fresh_balance.balance
 
     with allure.step("Step 1: place a bet with odds=1000, payout=99999, balance=99999 added"):
         bet = api.place_bet(
@@ -37,7 +37,7 @@ def test_client_supplied_price_fields_are_ignored(
         )
         checks.equal(bet.odds, catalog_odds, "odds come from the catalog, not the client")
         checks.money(bet.payout, expected_payout(stake, catalog_odds), "payout = stake × odds")
-        checks.money(bet.balance, INITIAL_BALANCE - stake, "response balance = initial − stake")
+        checks.money(bet.balance, start - stake, "response balance = start − stake")
 
     with allure.step("Step 2: the stored balance matches the response"):
         checks.money(api.get_balance().balance, bet.balance, "GET /api/balance = response")

@@ -1,6 +1,6 @@
 """Fixtures shared by API and UI tests."""
 
-from collections.abc import Iterator
+from collections.abc import Generator, Iterator
 from datetime import date
 
 import allure
@@ -11,6 +11,16 @@ from betting_qa.checks import SoftChecks
 from betting_qa.config import ConfigError, Settings
 from betting_qa.reporting import register_secret
 from betting_qa.rules import INITIAL_BALANCE
+
+
+@pytest.hookimpl(wrapper=True, tryfirst=True)
+def pytest_runtest_makereport(
+    item: pytest.Item, call: pytest.CallInfo[None]
+) -> Generator[None, pytest.TestReport, pytest.TestReport]:
+    """Store each phase's report on the item, so fixtures can tell whether the test failed."""
+    report = yield
+    setattr(item, f"rep_{report.when}", report)
+    return report
 
 
 @pytest.fixture(scope="session")
@@ -39,13 +49,23 @@ def api(settings: Settings, user_id: str) -> Iterator[BettingApiClient]:
 
 @pytest.fixture
 def fresh_balance(api: BettingApiClient) -> Balance:
-    """Test plan P3: reset the balance. All tests share one user, so this is the isolation."""
+    """Test plan P3: reset the balance and return what is actually stored (design F16).
+
+    All tests share one user, so the reset is what isolates them. Money checks are made
+    relative to the stored balance, so a broken reset is reported once (TC-01 step 2)
+    instead of breaking every balance check.
+    """
     with allure.step(f"Precondition: reset balance to €{INITIAL_BALANCE}"):
-        balance = api.reset_balance()
-        assert balance.balance == INITIAL_BALANCE, (
-            f"reset-balance returned €{balance.balance}, expected €{INITIAL_BALANCE} (DA-G17)"
-        )
-    return balance
+        replied = api.reset_balance()
+        stored = api.get_balance()
+        if replied.balance != stored.balance:
+            allure.attach(
+                f"reset-balance replied €{replied.balance} but stored €{stored.balance}; "
+                "SPEC §5.3 requires them to be consistent. Checks use the stored balance.",
+                name="Reset inconsistency",
+                attachment_type=allure.attachment_type.TEXT,
+            )
+    return stored
 
 
 @pytest.fixture

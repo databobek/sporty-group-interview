@@ -4,10 +4,15 @@ The report is public, so registered secrets (the candidate's user-id) are replac
 `***` in every attachment (design F15).
 """
 
+import logging
 from urllib.parse import urlsplit
 
 import allure
 import requests
+from selenium.webdriver.chromium.webdriver import ChromiumDriver
+from selenium.webdriver.remote.webdriver import WebDriver
+
+log = logging.getLogger(__name__)
 
 MASK = "***"
 MASKED_HEADERS = frozenset({"x-user-id"})
@@ -25,6 +30,42 @@ def mask(text: str) -> str:
     for secret in _secrets:
         text = text.replace(secret, MASK)
     return text
+
+
+def attach_ui_evidence(driver: WebDriver, name: str) -> None:
+    """Attach screenshot, page source and browser console log.
+
+    Each part is captured on its own: if the browser is already gone, the failure is
+    logged and the test's original failure is still the one reported.
+    """
+    try:
+        allure.attach(
+            driver.get_screenshot_as_png(),
+            name=f"{name}: screenshot",
+            attachment_type=allure.attachment_type.PNG,
+        )
+    except Exception as exc:  # evidence must never replace the real failure
+        log.warning("Could not capture screenshot: %s", exc)
+    try:
+        allure.attach(
+            mask(driver.page_source),
+            name=f"{name}: page source",
+            attachment_type=allure.attachment_type.HTML,
+        )
+    except Exception as exc:  # evidence must never replace the real failure
+        log.warning("Could not capture page source: %s", exc)
+    try:
+        if not isinstance(driver, ChromiumDriver):
+            return
+        entries = driver.get_log("browser")  # type: ignore[no-untyped-call]  # selenium is untyped here
+        console = "\n".join(f"[{e['level']}] {e['message']}" for e in entries) or "(empty)"
+        allure.attach(
+            mask(console),
+            name=f"{name}: console log",
+            attachment_type=allure.attachment_type.TEXT,
+        )
+    except Exception as exc:  # evidence must never replace the real failure
+        log.warning("Could not capture console log: %s", exc)
 
 
 def attach_api_exchange(response: requests.Response) -> None:

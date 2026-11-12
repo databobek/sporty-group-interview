@@ -60,8 +60,10 @@ test-plan scenarios even though only two are implemented.
 | F11 | Unit tests | None. Framework unit tests are required in a real implementation but are outside this task's scope, and the README says so. |
 | F12 | Assertion style | Soft checks: each test collects its failed checks and fails once at the end, listing all of them. Errors that stop the journey (a missing element, an `ApiError`) still fail at once. |
 | F13 | Receipt timestamp tolerance | Measured, not assumed. The first TC-01 run records the actual delay, and the tolerance is set from it. DA-G19 is updated with the measured delay as a documentation issue. |
+| F13a | Receipt timestamp, after measuring | The receipt time is the click time cut to the minute (delay 0 s). TC-01 records the displayed time and the measured delay in the report and does not assert on them. DA-G19 is updated. |
 | F14 | Virtualenv | In-project `.venv/` (`poetry.toml`) |
 | F15 | `CANDIDATE_ID` in the public report | Hidden everywhere. `reporting.register_secret()` records it, and every Allure attachment (API exchanges, page source, console log) has it replaced by `***`. It is not a report parameter and does not appear in step titles. Screenshots show only the viewport, not the address bar. |
+| F16 | Broken reset | `reset-balance` replies €125.50 but stores €120.00 (SPEC §5.3). `fresh_balance` returns the stored balance after the reset and attaches a note when it differs from the reply. Money checks are relative to that real start. TC-01 step 2 still checks the header against €125.50, so the reset defect is reported once. |
 
 ## Project layout
 
