@@ -1,0 +1,9 @@
+8 check(s) failed:
+- step 2: header balance (DA-G17): expected €125.50 (±€0.01), got €120.00
+- step 3: kickoff label shows a time (DA-C2), got 'Tomorrow'
+- step 4: slip shows the available balance (SPEC §2.2)
+- step 7: match (home vs away): expected ('Bayern Munich', 'Leverkusen'), got ('Leverkusen', 'Bayern Munich')
+- step 7: selection: expected 'Home', got None
+- step 7: payout matches the slip: expected €17.50 (±€0.01), got €20.00
+- step 8: header balance = start − stake: expected €110.00 (±€0.01), got €120.00
+- step 9: API = header: expected €120.00 (±€0.01), got €110

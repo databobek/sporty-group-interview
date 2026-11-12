@@ -1,0 +1,11 @@
+GET https://qae-assignment-tau.vercel.app/api/balance
+User-Agent: python-requests/2.34.2
+Accept-Encoding: gzip, deflate
+Accept: */*
+Connection: keep-alive
+x-user-id: ***
+
+
+
+--- 200 OK (258 ms)
+{"balance":110,"currency":"EUR"}

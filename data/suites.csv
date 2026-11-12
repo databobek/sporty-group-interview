@@ -5,4 +5,10 @@
     balance, a customer could set their own price or top up their own balance. The UI
     cannot prevent that; only the server can (SPEC §5.3 ""Extra fields may be ignored"",
     DA-G11). It is fast, needs no browser, and a failure is unambiguous.
-    ","0","TC-03: client-supplied odds, payout and balance are ignored","","2026-11-12","skipped","2026-11-12","","","",""
+    ","1250","TC-03: client-supplied odds, payout and balance are ignored","tests.api","2026-11-12","passed","2026-11-12","","test_price_integrity","",""
+"Why this test is automated: it is the journey that earns money.
+
+    It runs the whole customer path once (select odds, enter a stake, place, read the
+    receipt, close) and checks that slip, receipt, header and API agree on every amount.
+    A break anywhere here means no bets, or bets charged or paid at the wrong amount.
+    ","8217","TC-01: a single bet is placed and the receipt and balance agree","tests.ui","2026-11-12","failed","2026-11-12","","test_place_bet","",""
