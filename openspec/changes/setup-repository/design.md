@@ -30,9 +30,10 @@ Decided on 2026-11-12.
 
 - Chosen: `git init -b main` and one initial commit of the setup.
 
-## Observations to carry forward (not yet acted on)
+## Observations to carry forward
 
-Spotted during transcription. They will go into a separate spec review:
+Spotted during transcription. `documentation-analysis.md` (change `documentation-analysis`) now covers
+each of these and more:
 
 - Minimum stake is €1.00 in §3 Business Rules and the §4.4 copy, but €1.01 in §4.1 Validation Rules.
 - §2.1 asks for a "kickoff date/time label", but the API field `kickoffDate` is `YYYY-MM-DD` (date only).
