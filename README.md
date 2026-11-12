@@ -7,7 +7,10 @@ Test analysis, a prioritized test plan and a small automation framework for the
 |---|---|
 | Spec review: contradictions, gaps and the assumptions tests rely on | [documentation-analysis.md](documentation-analysis.md) |
 | Test plan: six prioritized scenarios (Part A.1) | [test-plan.md](test-plan.md) |
+| Execution results of the top 3 scenarios and exploratory checks (Part A.2) | [execution-results.md](execution-results.md) |
+| Bug reports, with evidence (Part A.2) | [bug-reports.md](bug-reports.md), [evidence/](evidence/) |
 | Automation framework and two tests (Part B) | `src/betting_qa/`, `tests/` (this README) |
+| Strategy and recommendations (Part C) | [strategy-and-recommendations.md](strategy-and-recommendations.md) |
 | Decision log for every step | [openspec/changes/](openspec/changes/) |
 
 ## Automated tests
