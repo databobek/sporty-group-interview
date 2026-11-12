@@ -11,12 +11,12 @@
 
 ## 2. Build (after approval, broken down in an implementation plan)
 
-- [ ] 2.1 Install Poetry; scaffold `pyproject.toml`, `.gitignore`, `.env.example` and pre-commit
-- [ ] 2.2 `config.py`, `rules.py`, `money.py`, `reporting.py`
-- [ ] 2.3 API layer: models and client
-- [ ] 2.4 TC-03 API test
-- [ ] 2.5 Inspect the live DOM for selectors (read-only)
-- [ ] 2.6 UI layer: driver, base, home page, components
-- [ ] 2.7 TC-01 UI test
-- [ ] 2.8 CI workflow
-- [ ] 2.9 README
+- [x] 2.1 Install Poetry; scaffold `pyproject.toml`, `.gitignore`, `.env.example` and pre-commit
+- [x] 2.2 `config.py`, `rules.py`, `money.py`, `reporting.py`
+- [x] 2.3 API layer: models and client
+- [x] 2.4 TC-03 API test
+- [x] 2.5 Inspect the live DOM for selectors (read-only)
+- [x] 2.6 UI layer: driver, base, home page, components
+- [x] 2.7 TC-01 UI test
+- [x] 2.8 CI workflow
+- [x] 2.9 README
