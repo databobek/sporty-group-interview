@@ -57,6 +57,10 @@ test-plan scenarios even though only two are implemented.
 | F8 | Code quality | ruff (lint and format), mypy and pre-commit hooks, also run in CI |
 | F9 | Defaults | Balance reset per test; Chrome via Selenium Manager; headed locally, headless in CI, 1920×1080; explicit waits only inside page objects; `Decimal` for all money, compared at 2 dp with a €0.01 tolerance; on failure, attach a screenshot, the page source and the browser console log; attach every API exchange; CI on push to `main`, on pull requests and on manual trigger; Python 3.12; no retries; no parallel runs. (A new user-id per test was planned here and replaced by F10.) |
 | F10 | User identity | `CANDIDATE_ID` (env) is the app's `user-id`. It goes in the UI URL `/?user-id=<CANDIDATE_ID>`, as the brief specifies, and in the `x-user-id` header of every API call, so UI and API share one balance. It is required: if it is unset, the session stops at startup. |
+| F11 | Unit tests | None. Framework unit tests are required in a real implementation but are outside this task's scope, and the README says so. |
+| F12 | Assertion style | Soft checks: each test collects its failed checks and fails once at the end, listing all of them. Errors that stop the journey (a missing element, an `ApiError`) still fail at once. |
+| F13 | Receipt timestamp tolerance | Measured, not assumed. The first TC-01 run records the actual delay, and the tolerance is set from it. DA-G19 is updated with the measured delay as a documentation issue. |
+| F14 | Virtualenv | In-project `.venv/` (`poetry.toml`) |
 
 ## Project layout
 
@@ -73,6 +77,7 @@ test-plan scenarios even though only two are implemented.
 │   ├── config.py               Settings loaded from env
 │   ├── rules.py                business constants from the spec (stake limits, initial balance)
 │   ├── money.py                Decimal parsing and comparison helpers
+│   ├── checks.py               SoftChecks: collect failed checks, fail once at the end (F12)
 │   ├── reporting.py            Allure attachment helpers
 │   ├── api/
 │   │   ├── __init__.py
@@ -148,6 +153,22 @@ def money_close(actual: Decimal, expected: Decimal, tolerance: Decimal = MONEY_T
 def expected_payout(stake: Decimal, odds: Decimal) -> Decimal: ...
     # stake × odds, unrounded (DA-G1: no rounding mode assumed)
 ```
+
+### `checks.py` (F12)
+
+```python
+class SoftChecks:
+    def check(self, condition: bool, description: str) -> bool: ...          # record a failure if False
+    def equal(self, actual: object, expected: object, what: str) -> bool: ...
+    def money(self, actual: Decimal, expected: Decimal, what: str) -> bool: ...  # uses money_close
+    @property
+    def failures(self) -> list[str]: ...
+    def assert_all(self) -> None: ...
+        # if any failed: attach "Failed checks" to Allure and raise AssertionError("N check(s) failed:\n- ...")
+```
+
+Tests call `checks.assert_all()` explicitly as their last line, so a failure shows up as a test failure and
+not as a fixture teardown error. The helper is written by hand, with no `pytest-check` dependency.
 
 ### `api/models.py`
 
@@ -319,6 +340,7 @@ class ReceiptModal(BasePage):
 | `api` | function | `BettingApiClient` for `user_id`, closed on teardown |
 | `fresh_balance` | function | Calls `reset_balance()`, asserts €125.50 (P3) and returns the `Balance`. All tests share one user, so this reset is what isolates them. |
 | `catalog` | function | `api.get_matches()` (P4) |
+| `checks` | function | A new `SoftChecks` (F12) |
 | `driver` | function (`tests/ui`) | `create_driver(settings)`; attaches UI evidence when the test fails; always quits |
 | `home` | function (`tests/ui`) | `HomePage` opened for `user_id` after `fresh_balance` |
 
@@ -400,6 +422,7 @@ Triggers: push to `main`, pull requests, `workflow_dispatch`.
 6. Configuration: a table of environment variables, matching `.env.example`
 7. Project structure: a short tree with one line per module
 8. Tooling choices: Poetry, Allure, ruff, mypy and pre-commit, each with one sentence on why
+9. Scope note: framework unit tests are required in a real implementation but are outside this task's scope (F11)
 
 ## Left open
 

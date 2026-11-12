@@ -1,3 +1,17 @@
 # Source assignment documents (PDFs and their Markdown transcriptions).
 # Kept locally for reference only; not published in the public repository.
 docs/source/
+
+# Python
+.venv/
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Allure
+allure-results/
+allure-report/
+
+# Local configuration (holds CANDIDATE_ID)
+.env
