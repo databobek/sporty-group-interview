@@ -1,1 +1,0 @@
-Displayed 'TODAY, 05:44 PM'; now minus displayed = 0:00:53.158962 (display precision is 1 minute)

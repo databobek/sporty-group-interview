@@ -7,5 +7,5 @@ x-user-id: ***
 
 
 
---- 200 OK (1046 ms)
+--- 200 OK (301 ms)
 {"balance":120,"currency":"EUR"}

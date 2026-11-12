@@ -9,5 +9,5 @@ Content-Length: 145
 
 {"matchId": "bundesliga-bayern-leverkusen-2026-11-13", "selection": "HOME", "stake": 10.0, "odds": 1000.0, "payout": 99999.0, "balance": 99999.0}
 
---- 200 OK (991 ms)
+--- 200 OK (632 ms)
 {"message":"Bet placed successfully","matchId":"bundesliga-bayern-leverkusen-2026-11-13","selection":"HOME","stake":10,"odds":1.75,"payout":17.5,"balance":110,"currency":"USD"}
