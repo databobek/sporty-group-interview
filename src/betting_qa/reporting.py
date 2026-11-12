@@ -1,11 +1,30 @@
-"""Evidence attached to the Allure report."""
+"""Evidence attached to the Allure report.
+
+The report is public, so registered secrets (the candidate's user-id) are replaced by
+`***` in every attachment (design F15).
+"""
 
 from urllib.parse import urlsplit
 
 import allure
 import requests
 
+MASK = "***"
 MASKED_HEADERS = frozenset({"x-user-id"})
+
+_secrets: set[str] = set()
+
+
+def register_secret(value: str) -> None:
+    """Mask this value in every attachment from now on."""
+    if value:
+        _secrets.add(value)
+
+
+def mask(text: str) -> str:
+    for secret in _secrets:
+        text = text.replace(secret, MASK)
+    return text
 
 
 def attach_api_exchange(response: requests.Response) -> None:
@@ -13,7 +32,7 @@ def attach_api_exchange(response: requests.Response) -> None:
     request = response.request
     path = urlsplit(request.url or "").path
     headers = "\n".join(
-        f"{name}: {'***' if name.lower() in MASKED_HEADERS else value}"
+        f"{name}: {MASK if name.lower() in MASKED_HEADERS else value}"
         for name, value in request.headers.items()
     )
     body = request.body.decode() if isinstance(request.body, bytes) else (request.body or "")
@@ -23,7 +42,7 @@ def attach_api_exchange(response: requests.Response) -> None:
         f"--- {response.status_code} {response.reason} ({elapsed_ms} ms)\n{response.text}"
     )
     allure.attach(
-        text,
+        mask(text),
         name=f"{request.method} {path} → {response.status_code}",
         attachment_type=allure.attachment_type.TEXT,
     )

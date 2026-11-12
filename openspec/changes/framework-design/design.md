@@ -61,6 +61,7 @@ test-plan scenarios even though only two are implemented.
 | F12 | Assertion style | Soft checks: each test collects its failed checks and fails once at the end, listing all of them. Errors that stop the journey (a missing element, an `ApiError`) still fail at once. |
 | F13 | Receipt timestamp tolerance | Measured, not assumed. The first TC-01 run records the actual delay, and the tolerance is set from it. DA-G19 is updated with the measured delay as a documentation issue. |
 | F14 | Virtualenv | In-project `.venv/` (`poetry.toml`) |
+| F15 | `CANDIDATE_ID` in the public report | Hidden everywhere. `reporting.register_secret()` records it, and every Allure attachment (API exchanges, page source, console log) has it replaced by `***`. It is not a report parameter and does not appear in step titles. Screenshots show only the viewport, not the address bar. |
 
 ## Project layout
 
@@ -336,7 +337,7 @@ class ReceiptModal(BasePage):
 | Fixture | Scope | Provides |
 |---|---|---|
 | `settings` | session | `Settings.from_env()`; exits the session if `CANDIDATE_ID` is unset |
-| `user_id` | session | `settings.candidate_id` (F10); added to the Allure report as a parameter |
+| `user_id` | session | `settings.candidate_id` (F10); never shown in the report (F15) |
 | `api` | function | `BettingApiClient` for `user_id`, closed on teardown |
 | `fresh_balance` | function | Calls `reset_balance()`, asserts €125.50 (P3) and returns the `Balance`. All tests share one user, so this reset is what isolates them. |
 | `catalog` | function | `api.get_matches()` (P4) |
